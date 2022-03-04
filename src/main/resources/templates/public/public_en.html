@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <title>Launch a vote - voter</title>
+
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom stylesheet -->
+    <link href="/static/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/pub/sticky_footer_navbar.css" rel="stylesheet">
+    <link href="/static/progress/css/component.css" rel="stylesheet" type="text/css"/>
+
+    <!-- Custom script -->
+    <script src="/static/progress/js/modernizr.custom.js"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button aria-controls="navbar" aria-expanded="false" class="navbar-toggle collapsed" data-target="#navbar"
+                    data-toggle="collapse" type="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand logo" data-target="#mainPage" data-toggle="modal" style="cursor:pointer;">voter</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Launch a vote</a></li>
+                <li><a data-target="#toVoteID" data-toggle="modal" href="javascript: void(0);">To VoteID ..</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h1 class="mt-5">Launch a vote</h1>
+    <p class="lead">Fill in following options to launch a vote, without login.</p>
+    <p class="text-info"><b>If you submit following options, you <font color="red">CANNOT EDIT/DELETE ANYWAY</font>.</b>
+    </p>
+    <!-- Options -->
+    <!-- TITLE -->
+    <div class="input-group" id="borderTitle">
+        <span class="input-group-addon"><i class="fa fa-quote-left"></i></span>
+        <input aria-describedby="basic-addon1" class="form-control" id="voteTitle" placeholder="Vote title" type="text">
+    </div>
+    <br>
+    <!-- DESCRIBE -->
+    <div class="input-group" id="borderDescribe">
+        <textarea class="form-control" id="voteDescribe" name=textarea placeholder="Vote describe, HTML source code for elements is supported" rows="3"></textarea>
+        <span class="input-group-addon"><i class="fa fa-quote-right"></i></span>
+    </div>
+    <br>
+    <!-- MODE AND MAXIMUM -->
+    <div class="input-group" id="status">
+        <div class="input-group-btn">
+            <button aria-expanded="false" aria-haspopup="true" class="btn btn-default dropdown-toggle"
+                    data-toggle="dropdown" id="mode"
+                    type="button">Selection mode <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li><a href="javascript: void(0);" onclick="singleElection()">Single election</a></li>
+                <li><a href="javascript: void(0);" onclick="multipleSelection()">Multiple selection</a></li>
+            </ul>
+        </div>
+        <input class="form-control" id="modeInput" placeholder="( '-1' is unlimited ) Maximum Selection of Items"
+               type="text">
+    </div>
+    <!-- LINE -->
+    <p class="page-header"></p>
+    <!-- OPTIONS -->
+    <div class="option1">
+        <div class="input-group">
+            <span class="input-group-addon">Option 1</span>
+            <input class="form-control" id="option1" type="text">
+        </div>
+    </div>
+    <br>
+    <div class="option2">
+        <div class="input-group">
+            <span class="input-group-addon">Option 2</span>
+            <input class="form-control" id="option2" type="text">
+        </div>
+    </div>
+    <br>
+    <div class="option3">
+        <div class="input-group">
+            <span class="input-group-addon">Option 3</span>
+            <input class="form-control" id="option3" type="text">
+            <div class="cls"></div>
+            <span class="input-group-btn" id="close3">
+                <button class="btn btn-default" onclick="delOption()" type="button">
+                    <i class="fa fa-close"></i>
+                </button>
+            </span>
+        </div>
+        <br>
+    </div>
+    <!-- More selection -->
+    <div class="add"></div>
+    <!-- Add button -->
+    <button class="btn btn-default pull-right" onclick="addOption()" type="button">
+        <i class="fa fa-plus"></i>
+    </button>
+    <!-- Submit button -->
+    <p>
+    <div class="isError"></div>
+    </p>
+    <section>
+        <button class="progress-button" data-horizontal data-perspective data-style="rotate-side-up"
+                onclick="submitVote()">Submit
+        </button>
+    </section>
+    <br>
+</div>
+
+<br>
+
+<footer class="footer">
+    <div class="container">
+        <br>
+        <span class="text-muted" th:text="'© ️' + ${YEAR}"></span><span>&nbsp;<a href=https://github.com/Pandapd/voter>voter</a>
+        <img height="32" src="/static/images/china.png" width="32"/></span>
+    </div>
+</footer>
+
+<script src="/static/jquery/jquery-3.4.1.min.js"></script>
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/bootstrap/js/icheck.min.js"></script>
+
+<!-- Custom JS -->
+<script src="/static/progress/js/classie.js"></script>
+<script src="/static/progress/js/progressButton.js"></script>
+<script>
+    [].slice.call(document.querySelectorAll('button.progress-button')).forEach(function (bttn) {
+        new ProgressButton(bttn, {
+            callback: function (instance) {
+                var progress = 0,
+                    interval = setInterval(function () {
+                        progress = Math.min(progress + Math.random() * 0.1, 1);
+                        instance._setProgress(progress);
+
+                        if (progress === 1) {
+                            instance._stop(1);
+                            clearInterval(interval);
+                        }
+                    }, 100);
+            }
+        });
+    });
+</script>
+<script src="/static/js/pub/action_en.js"></script>
+
+<span th:replace="/vote/modal/toIndex_en"></span>
+<span th:replace="/vote/modal/toVoteID_en"></span>
+
+<script src="/static/js/vote/toVoteID.js"></script>
+</body>
+</html>
